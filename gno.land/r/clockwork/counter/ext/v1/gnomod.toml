@@ -1,0 +1,2 @@
+module = "gno.land/r/clockwork/counter/ext/v1"
+gno = "0.9"
