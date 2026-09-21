@@ -102,6 +102,7 @@ than your code.
 ```
 gno.land/p/clockwork/app/v0           the package you import
 gno.land/p/clockwork/upgradeable/v0   the proxy layer underneath it
+gno.land/p/clockwork/wire/v0          a low-gas binary codec for call payloads (standalone)
 gno.land/r/yourname/myapp             the template: copy this
 gno.land/r/clockwork/todo             worked example: an API that grows
 gno.land/r/clockwork/counter          worked example: typed entry points instead
