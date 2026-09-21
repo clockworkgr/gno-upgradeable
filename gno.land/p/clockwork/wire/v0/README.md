@@ -112,6 +112,17 @@ for k := uint64(0); k < n; k++ {
 }
 ```
 
+## Schemas and codegen
+
+Hand-writing the marshal and unmarshal keeps the encoder and decoder in step by
+convention — both must call the same types in the same order. When you want that
+guaranteed, and the same types and codecs generated for other languages, declare
+the shape once with [wire/schema](../schema/v0): it fixes the field order from
+the declaration (sorted by name, no field numbers) and generates the struct and
+`MarshalWire`/`Unmarshal` for you, and `gno.land/p/clockwork/orderpb/v0` is a
+worked example of that output. The wire format is unchanged — the schema is
+metadata that never reaches the wire.
+
 ## Gas: structs vs a hand-rolled text codec
 
 Encode and decode of the two example structs, wire versus a delimited-text
