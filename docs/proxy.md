@@ -193,7 +193,7 @@ once frozen**, including the authority's own calls.
 | `AddExtension(_ int, rlm realm, pkgPath string)` | authority | Grants no new power; see [patterns](patterns.md#extending-a-frozen-api). |
 | `DropExtension(_ int, rlm realm, pkgPath string)` | authority | The realm stays deployed; it just stops reaching the state. |
 | `TransferAuthority(_ int, rlm realm, auth Authority)` | authority | Panics on nil. |
-| `Freeze(_ int, rlm realm)` | authority | No unfreeze. Refuses with nothing live. Clears pending and history; **keeps extensions**, since they are reachable code the frozen implementation may depend on. |
+| `Freeze(_ int, rlm realm)` | authority | No unfreeze. Refuses with nothing live. Clears pending and history; **finalizes extensions** — the registered set survives (reachable code the frozen impl may depend on) but can no longer be added to or dropped, so review it before freezing. |
 | `AssertAuthorized(_ int, rlm realm)` | — | For wrappers doing work before delegating. |
 
 ## Authority

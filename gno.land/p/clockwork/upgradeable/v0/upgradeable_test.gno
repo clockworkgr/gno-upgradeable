@@ -386,6 +386,10 @@ func TestFreezeEndsEveryPathToChange(cur realm, t *testing.T) {
 	testing.SetRealm(testing.NewCodeRealm(implB))
 	func(cur realm) { p.Propose(0, cur, &fakeImpl{name: "b"}) }(cross(cur))
 
+	// an extension registered before the freeze
+	testing.SetRealm(testing.NewUserRealm(alice))
+	func(cur realm) { p.AddExtension(0, cur, outside) }(cross(cur))
+
 	testing.SetRealm(testing.NewUserRealm(alice))
 	func(cur realm) { p.Freeze(0, cur) }(cross(cur))
 
@@ -421,5 +425,20 @@ func TestFreezeEndsEveryPathToChange(cur realm, t *testing.T) {
 	testing.SetRealm(testing.NewCodeRealm(implB))
 	assertAborts(t, ErrFrozen, func() {
 		func(cur realm) { p.Propose(0, cur, &fakeImpl{}) }(cross(cur))
+	})
+
+	// The extension set is finalized at freeze: what was registered survives,
+	// but it can neither be added to nor -- crucially -- dropped, so a
+	// registered extension keeps its state access permanently.
+	if exts := p.Extensions(); len(exts) != 1 || exts[0] != outside {
+		t.Errorf("extension should survive freeze, got %v", exts)
+	}
+	testing.SetRealm(testing.NewUserRealm(alice))
+	assertAborts(t, ErrFrozen, func() {
+		func(cur realm) { p.AddExtension(0, cur, implB) }(cross(cur))
+	})
+	testing.SetRealm(testing.NewUserRealm(alice))
+	assertAborts(t, ErrFrozen, func() {
+		func(cur realm) { p.DropExtension(0, cur, outside) }(cross(cur))
 	})
 }

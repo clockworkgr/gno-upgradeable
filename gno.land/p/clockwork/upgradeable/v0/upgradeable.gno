@@ -425,6 +425,12 @@ func (p *Proxy) TransferAuthority(_ int, rlm realm, auth Authority) {
 //
 // It refuses to freeze with nothing live, which would leave the realm
 // permanently unable to answer a call.
+//
+// Freezing finalizes the extension set. Whatever is registered survives (the
+// frozen implementation may depend on it), but afterwards nothing can be added
+// and -- because Drop is a mutation too -- nothing can be dropped. So a
+// registered extension keeps its access to the realm's state for good. Review
+// the extensions before you freeze; you cannot revoke one after.
 func (p *Proxy) Freeze(_ int, rlm realm) {
 	p.assertMutable()
 	p.assertAuthorized(0, rlm)

@@ -213,7 +213,10 @@ transactions, each requeueing what it displaced.
 ### `forget` and `freeze` are irreversible
 
 `forget` ends rollback. `freeze` ends everything, including its own reversal.
-Neither asks twice.
+Neither asks twice. Freeze also **finalizes the extension set**: a registered
+extension survives the freeze but can no longer be dropped, so it keeps its
+access to the realm's state permanently. Review your extensions before
+freezing — you cannot revoke one afterward.
 
 ### Nothing expires
 
